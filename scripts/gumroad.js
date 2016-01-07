@@ -66,7 +66,13 @@ requestPage(1, function(sales) {
     ' (' + sales.length + ')');
   console.log('---');
 
+  console.log('Split total: ' +
+    '$' + (total / 100 / 4).formatMoney(0, '.', ','));
+  console.log('---');
+
   var lastDate = moment(lastSale.created_at);
-  console.log('Last sale: ' + lastDate.format('h:mm A') +
+  console.log('Last sale: ' +
+    '$' + (lastSale.price / 100).formatMoney(0, '.', ',') + ' ' +
+    lastDate.format('h:mm A') +
     ' (' + lastDate.fromNow() + ')');
 });
