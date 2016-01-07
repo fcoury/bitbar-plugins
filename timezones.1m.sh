@@ -19,7 +19,7 @@ getTime() {
   
   RES=`echo "var m=require('${MOMT}'); console.log(m().tz('$2').format('h:mm A'))" | node`
   if [ ! -z "$3" ]; then
-    echo "$1" "$RES"
+    echo "$1" "$RES" "| color=#8470ff font='Inconsolata LGC'"
   else
     echo "$RES"
   fi
@@ -27,6 +27,6 @@ getTime() {
 
 getTime "Glendale" "America/Los_Angeles"
 echo "---"
-getTime "Miami" "America/New_York" 1
+getTime "MIA" "America/New_York" 1
 echo "---"
-getTime "Campinas" "America/Sao_Paulo" 1
+getTime "CPS" "America/Sao_Paulo" 1
