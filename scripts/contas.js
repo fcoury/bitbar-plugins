@@ -1,50 +1,53 @@
-const Excel = require('exceljs');
+// const Excel = require('exceljs');
+const XLSX = require('xlsx');
 const moment = require('moment');
 
-var workbook = new Excel.Workbook();
+var workbook = new XLSX.readFile('/Users/fcoury/Dropbox/Despesas-Principal.xlsx');
 var bills = {};
 
-workbook.xlsx.readFile('/Users/fcoury/Dropbox/Despesas-Principal.xlsx')
-.then(function(workbook) {
-  var sheet = workbook.getWorksheet('Current');
-  var rowNum = 2;
-
-  while (true) {
-    var row = sheet.getRow(rowNum);
-    var title = row.getCell(1).value;
-    var day = row.getCell(3).value;
-
-    if (!title) {
-      break;
-    }
-
-    if (!bills[day]) {
-      bills[day] = [];
-    }
-
-    bills[day].push(title);
-    rowNum += 1;
+var sheet = workbook.Sheets['Current'];
+var rowNum = 2;
+while (true) {
+  if (!sheet['A' + rowNum]) {
+    break;
   }
 
-  var selBills = bills[moment().format('d')];
-  // var selBills = bills['15'];
+  var title = sheet['A' + rowNum].v;
+  var day = sheet['C' + rowNum].v;
 
-  if (selBills) {
-    var d = selBills[0];
-    if (selBills.length > 1) {
-      d += ' +' + (selBills.length-1)
-    }
-    console.log(d);
-    console.log('---');
+  if (!title) {
+    break;
+  }
 
-    for (var i = 1; i < selBills.length; i++) {
-      var bill = selBills[i];
-      console.log(bill);
-    }
+  if (!bills[day]) {
+    bills[day] = [];
   }
-  else {
-    console.log('-');
-    console.log('---');
-    console.log('Nenhuma conta hoje');
+
+  bills[day].push(title);
+  rowNum += 1;
+}
+
+var selBills = bills[parseInt(moment().format('D'))];
+
+if (selBills) {
+  var d = selBills[0];
+  var i = d.indexOf('(');
+  if (i > -1) {
+    d = d.substring(0, i-1);
   }
-});
+  if (selBills.length > 1) {
+    d += ' +' + (selBills.length-1)
+  }
+  console.log(d);
+  console.log('---');
+
+  for (var i = 1; i < selBills.length; i++) {
+    var bill = selBills[i];
+    console.log(bill);
+  }
+}
+else {
+  console.log('-');
+  console.log('---');
+  console.log('Nenhuma conta hoje');
+}
