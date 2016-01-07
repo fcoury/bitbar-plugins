@@ -24,7 +24,7 @@ SIG="▲"
 if [[ ${VAR:0:1} == "-" ]]; then
   SIG="▼"
 fi
-VAR=`printf "%0.2f" "$COT"`
+VAR=`printf "%0.3f" "$COT"`
 VAR=`echo "$VAR" | tr . ,`
 
 # Cotação principal
