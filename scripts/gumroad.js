@@ -32,9 +32,15 @@ function requestPage(page, callback) {
     for (var i = 0; i < thisSales.length; i++) {
       var sale = thisSales[i];
       // console.log(sale.product_name + ' - ' + sale.created_at);
-      if (sale.product_name.indexOf('ng-book 2') > -1) {
-        sales.push(sale);
+      if (sale.product_name.indexOf('ng-book 2') < 0) {
+        continue;
       }
+
+      if (sale.refunded || sale.chargedback || !sale.paid) {
+        continue;
+      }
+
+      sales.push(sale);
       if (lastSale == null) {
         lastSale = sale;
       }
@@ -71,8 +77,7 @@ requestPage(1, function(sales) {
   console.log('---');
 
   var lastDate = moment(lastSale.created_at);
-  console.log('Last sale: ' +
-    '$' + (lastSale.price / 100).formatMoney(0, '.', ',') + ' ' +
+  console.log('Last sale: ' + lastSale.formatted_total_price + ' ' +
     lastDate.format('h:mm A') +
     ' (' + lastDate.fromNow() + ')');
 });
