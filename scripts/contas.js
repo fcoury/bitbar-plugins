@@ -2,6 +2,37 @@
 const XLSX = require('xlsx');
 const moment = require('moment');
 
+function printBills(day, bills, skipHighlight) {
+  if (bills) {
+    if (!skipHighlight) {
+      var d = bills[0];
+      var i = d.indexOf('(');
+      if (i > -1) {
+        d = d.substring(0, i-1);
+      }
+      if (bills.length > 1) {
+        d += ' +' + (bills.length-1)
+      }
+      console.log(d);
+      console.log('---');
+    }
+
+    if (bills.length > 1) {
+      console.log(day);
+
+      for (var i = 0; i < bills.length; i++) {
+        var bill = bills[i];
+        console.log(bill + '| color=blue');
+      }
+    }
+  }
+  else {
+    console.log('-');
+    console.log('---');
+    console.log('No bills');
+  }
+}
+
 var workbook = new XLSX.readFile('/Users/fcoury/Dropbox/Despesas-Principal.xlsx');
 var bills = {};
 
@@ -27,27 +58,18 @@ while (true) {
   rowNum += 1;
 }
 
-var selBills = bills[parseInt(moment().format('D'))];
+var today = parseInt(moment().format('D'));
+var tomorrow = parseInt(moment().add(1, 'days').format('D'));
+var selBills = bills[today];
+var tomBills = bills[tomorrow];
 
-if (selBills) {
-  var d = selBills[0];
-  var i = d.indexOf('(');
-  if (i > -1) {
-    d = d.substring(0, i-1);
-  }
-  if (selBills.length > 1) {
-    d += ' +' + (selBills.length-1)
-  }
-  console.log(d);
-  console.log('---');
+printBills('TODAY', selBills);
 
-  for (var i = 1; i < selBills.length; i++) {
-    var bill = selBills[i];
-    console.log(bill);
-  }
+console.log('---');
+if (tomBills) {
+  printBills('TOMORROW', tomBills, true);
 }
 else {
-  console.log('-');
-  console.log('---');
-  console.log('Nenhuma conta hoje');
+  console.log('TOMORROW');
+  console.log('No bills')
 }
