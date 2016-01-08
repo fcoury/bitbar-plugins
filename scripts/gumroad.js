@@ -20,9 +20,10 @@ var n = this,
 
 function requestPage(page, callback) {
   var today = moment().format('YYYY-MM-DD');
+  var lastWeek = moment().add(-7, 'day').format('YYYY-MM-DD');
   var url = 'https://api.gumroad.com/v2/sales' +
     '?access_token=' + TOKEN +
-    '&after=' + today +
+    '&after=' + lastWeek +
     '&page=' + page;
 
   request(url, function(error, response, body) {
@@ -63,21 +64,41 @@ function requestPage(page, callback) {
   });
 }
 
-requestPage(1, function(sales) {
-  var total = _.inject(sales, function(t, n) {
+function salesFor(rawSales, date) {
+  var sales = _.filter(rawSales, filterSales(date));
+  return [_.inject(sales, function(t, n) {
     return t + n.price;
-  }, 0);
-  console.log(
-    '$' + (total / 100).formatMoney(0, '.', ',') +
-    ' (' + sales.length + ')');
-  console.log('---');
+  }, 0), sales.length];
+}
 
+function filterSales(date) {
+  return function(sale) {
+    return moment(sale.created_at).format('YYYY-MM-DD') === date;
+  };
+}
+
+requestPage(1, function(sales) {
+  var today = moment().format('YYYY-MM-DD');
+
+  var todaySales = salesFor(sales, today);
+  console.log('$' + (todaySales[0] / 100).formatMoney(0, '.', ',') +
+    ' (' + todaySales[1] + ')');
+
+  console.log('---');
   console.log('Split total: ' +
-    '$' + (total / 100 / 4).formatMoney(0, '.', ','));
-  console.log('---');
+    '$' + (todaySales[0] / 100 / 4).formatMoney(0, '.', ','));
 
+  console.log('---');
   var lastDate = moment(lastSale.created_at);
   console.log('Last sale: ' + lastSale.formatted_total_price + ' ' +
     lastDate.format('h:mm A') +
     ' (' + lastDate.fromNow() + ')');
+
+  console.log('---');
+  for (var i = 1; i < 7; i++) {
+    var date = moment().add(-i, 'day').format('YYYY-MM-DD');
+    var total = salesFor(sales, date);
+    console.log(date + ' -  $' + (total[0] / 100).formatMoney(0, '.', ',') +
+      ' (' + total[1] + ')');
+  }
 });
