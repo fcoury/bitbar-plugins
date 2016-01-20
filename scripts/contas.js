@@ -22,7 +22,12 @@ function printBills(day, bills, skipHighlight) {
 
       for (var i = 0; i < bills.length; i++) {
         var bill = bills[i];
-        console.log(bill + '| color=blue');
+        if (bill.indexOf('✓') > -1) {
+          console.log(bill);
+        }
+        else {
+          console.log(bill + '| color=blue');
+        }
       }
     }
   }
@@ -45,13 +50,25 @@ while (true) {
 
   var title = sheet['A' + rowNum].v;
   var day = sheet['C' + rowNum].v;
+  var paid = sheet['F' + rowNum];
 
   if (!title) {
     break;
   }
 
+  if (paid) {
+    paid = paid.v;
+  }
+  else {
+    paid = false;
+  }
+
   if (!bills[day]) {
     bills[day] = [];
+  }
+
+  if (paid === 'S') {
+    title = '✓ ' + title;
   }
 
   bills[day].push(title);
