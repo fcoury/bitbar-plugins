@@ -95,10 +95,15 @@ requestPage(1, function(sales) {
     ' (' + lastDate.fromNow() + ')');
 
   console.log('---');
-  for (var i = 1; i < 7; i++) {
+  var sum = 0;
+  for (var i = 0; i < 7; i++) {
     var date = moment().add(-i, 'day').format('YYYY-MM-DD');
     var total = salesFor(sales, date);
+    sum += total[0];
     console.log(date + ' -  $' + (total[0] / 100).formatMoney(0, '.', ',') +
+      ' / $' + (total[0] / 100/ 4).formatMoney(0, '.', ',') +
       ' (' + total[1] + ')');
   }
+  console.log('Total -  $' + (sum / 100).formatMoney(0, '.', ',') +
+    ' / $' + (sum / 100/ 4).formatMoney(0, '.', ','));
 });
