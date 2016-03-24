@@ -16,7 +16,10 @@ function showUnread(folder) {
 
     console.log('---');
     console.log(folder.name);
-    _.forEach(json.items, (m) => console.log(m.subject));
+    _.forEach(json.items, (m) => {
+      const link = `https://secure.helpscout.net/conversation/${m.id}/${m.number}/?folderId=${m.folderId}`;
+      console.log(`${m.subject} | href=${link}`);
+    });
   })
 }
 request(`${PREFIX}/mailboxes/${MAILBOX_ID}.json`, (err, res, body) => {
