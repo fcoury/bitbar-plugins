@@ -9,14 +9,14 @@ function getStatus(id) {
     var $ = cheerio.load(body);
     var rows = $('table tr');
     var cols = $('td', rows[1]);
+    var location = $(cols[1]).text();
     var status = $(cols[2]).text();
+    var city = location.split('-')[1];
 
-    console.log(`${id} - ${status}`)
+    console.log(`${city}`)
+    console.log('---');
+    console.log(`${id} - ${status} - ${location} | color=blue href=http://websro.correios.com.br/sro_bin/txect01%24.QueryList?P_LINGUA=001&P_TIPO=001&P_COD_UNI=${id}`);
   });
 }
 
-getStatus("LB501955855SE");
-getStatus("LB501981095SE");
-getStatus("LB501981422SE");
-getStatus("LB501981555SE");
-getStatus("LB502052931SE");
+getStatus("CF221083624US");
