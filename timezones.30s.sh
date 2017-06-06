@@ -25,8 +25,10 @@ getTime() {
   fi
 }
 
-getTime "Glendale" "America/Los_Angeles"
+getTime "Miami" "America/New_York"
 echo "---"
-getTime "MIA" "America/New_York" 1
+getTime "WST" "America/Los_Angeles" 1
+getTime "PAK" "Asia/Karachi" 1
 echo "---"
 getTime "CPS" "America/Sao_Paulo" 1
+echo "---"
