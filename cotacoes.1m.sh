@@ -17,8 +17,9 @@ export PATH=${PATH}:/usr/local/bin
 #
 # Cotação Dólar
 #
-JSON=`curl -s http://api.promasters.net.br/cotacao/v1/valores?moedas=USD&alt=json`
-COT=`echo $JSON | /usr/local/bin/jsawk "return this.valores.USD.valor;"`
+# JSON=`curl -s http://api.promasters.net.br/cotacao/v1/valores?moedas=USD&alt=json`
+JSON=`curl -s http://api.fixer.io/latest?base=USD`
+COT=`echo $JSON | /usr/local/bin/jsawk "return this.rates.BRL;"`
 echo "USD $COT"
 
 # JSON=`curl -s http://developers.agenciaideias.com.br/cotacoes/json`
